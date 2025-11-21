@@ -26,9 +26,14 @@ hole_t* holes_list_find_best_fit(hole_t* head, hole_t* tail, unsigned int reques
 
 hole_t* holes_list_find_closest_hole(hole_t* head, hole_t* tail, unsigned int position); // The hole previous to such position
 
-void holes_list_request_hole(hole_t** head, hole_t** tail, unsigned int requested_size);
+void holes_list_request_hole(hole_t** head, hole_t** tail, unsigned int requested_size, unsigned int pid, used_position_t** head_used_list, used_position_t** tail_used_list);
 
 // Double linked ordered list - used positions
 
+void used_list_insert(used_position_t* new_alloc, used_position_t** head, used_position_t** tail);
+
+used_position_t* used_list_remove(used_position_t** head, used_position_t** tail, unsigned int position);
+
+used_position_t* used_list_find_closest_position(used_position_t* head, used_position_t* tail, unsigned int position); // The used position previous to such position
 
 // Queue - For the pending assigns of memory
