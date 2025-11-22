@@ -1,82 +1,85 @@
 #include "../include/best-fit-tdas.h"
 
 // Holes
+// EN src/best-fit-tdas.c
+
 void holes_list_insert(hole_t** hole_ptr, hole_t** head, hole_t** tail){
     hole_t* new_hole = *hole_ptr;
     unsigned int position = new_hole->position;
 
-    if(*head == NULL || *tail == NULL){
+    // Empty list
+    if(*head == NULL){
         *head = new_hole;
         *tail = new_hole;
         new_hole->next = NULL;
         new_hole->prev = NULL;
-
         return;
     }
-    else{
-        hole_t* prev = holes_list_find_closest_hole(*head, *tail, position);
-        hole_t* next = NULL;
 
-        if(prev == NULL){
-            next = *head; 
-        }
-        else{
-            next = prev->next;
-        }
+    hole_t* prev = holes_list_find_closest_hole(*head, *tail, position);
+    hole_t* next = NULL;
+    
+    if(prev == NULL){
+        // Insert at begin
+        next = *head;
+        new_hole->next = next;
+        new_hole->prev = NULL;
+        next->prev = new_hole;
+        *head = new_hole;
+    } else {
+        // Insert after prev
+        next = prev->next;
+        
+        new_hole->prev = prev;
+        new_hole->next = next;
+        prev->next = new_hole;
 
-        short int merged_left= 0;
-
-        // Check and merge to the left
-        if(prev != NULL){
-            if(prev->size + prev->position == new_hole->position){
-                prev->size += new_hole->size;
-                merged_left = 1;
-
-                free(new_hole);
-                new_hole = prev;
-            }
-        }
-        // Check and merge to the right
         if(next != NULL){
-            if(new_hole->position + new_hole->size == next->position){
-                new_hole->size += next->size;
-                
-                new_hole->next = next->next;
-
-                if(next->next != NULL){
-                    next->next->prev = new_hole;
-                }
-                else {
-                    *tail = new_hole;
-                }
-
-                free(next);
-
-                merged_left = 1;
-            }
+            next->prev = new_hole;
+        } else {
+            *tail = new_hole;
         }
-        // If no merge ocurred
-        if(!merged_left){
-            if(prev==NULL){
-                new_hole->next = *head;
-                new_hole->prev = NULL;
-                if(*head != NULL){
-                    (*head)->prev = new_hole;
-                }
-                *head = new_hole;
-            } 
-            else{
-                new_hole->prev = prev;
-                new_hole->next = next;
-                prev->next = new_hole;
+    }
 
-                if(next!=NULL){
-                    next->prev = new_hole;
-                } 
-                else{
-                    *tail = new_hole;
-                }
-            }   
+    // Apply coalescing (fusion) if necessary
+
+    // Coalescing right
+    if(new_hole->next != NULL){
+        hole_t* right_neighbor = new_hole->next;
+        
+        if(new_hole->position + new_hole->size == right_neighbor->position){
+            // Absorb neighbor
+            new_hole->size += right_neighbor->size;
+            
+            // Remove neighbor
+            new_hole->next = right_neighbor->next;
+            if(right_neighbor->next != NULL){
+                right_neighbor->next->prev = new_hole;
+            } else {
+                *tail = new_hole; // If the neighbor was the last one 
+            }
+            
+            free(right_neighbor); 
+        }
+    }
+
+    // Coalescing left
+    if(new_hole->prev != NULL){
+        hole_t* left_neighbor = new_hole->prev;
+        
+        if(left_neighbor->position + left_neighbor->size == new_hole->position){
+            // Coalesce - the left neighbor will absorb the new hole
+            left_neighbor->size += new_hole->size;
+            
+            // Remove new_hole
+            left_neighbor->next = new_hole->next;
+            if(new_hole->next != NULL){
+                new_hole->next->prev = left_neighbor;
+            } else {
+                *tail = left_neighbor; // If now left_neighbor is the last at the list
+            }
+            
+            free(new_hole); 
         }
     }
 }
