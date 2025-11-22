@@ -1,4 +1,4 @@
-#include "best-fit-tdas.h"
+#include "../include/best-fit-tdas.h"
 
 // Holes
 void holes_list_insert(hole_t** hole_ptr, hole_t** head, hole_t** tail){
@@ -121,12 +121,12 @@ hole_t* holes_list_find_closest_hole(hole_t* head, hole_t* tail, unsigned int po
     return tail;
 }
 
-void holes_list_request_hole(hole_t** head, hole_t** tail, unsigned int requested_size, unsigned int pid, used_position_t** head_used_list, used_position_t** tail_used_list){
+unsigned int holes_list_request_hole(hole_t** head, hole_t** tail, unsigned int requested_size, unsigned int pid, used_position_t** head_used_list, used_position_t** tail_used_list){
     hole_t* found_hole = holes_list_find_best_fit(*head, *tail, requested_size);
     
     if(found_hole == NULL){
         // Añadir a queue de processos por alocar
-        return;
+        return UINT_MAX;
     }
     
     if(found_hole->size == requested_size){ 
@@ -156,6 +156,8 @@ void holes_list_request_hole(hole_t** head, hole_t** tail, unsigned int requeste
         found_hole->prev = NULL;
         found_hole->next = NULL;
         free(found_hole);
+
+        return new_allocation->position;
     }
     else{
         unsigned int alloc_pos = found_hole->position;
@@ -171,7 +173,11 @@ void holes_list_request_hole(hole_t** head, hole_t** tail, unsigned int requeste
         new_allocation->size = requested_size;
 
         used_list_insert(new_allocation, head_used_list, tail_used_list);
+
+        return alloc_pos; 
     }
+
+    return UINT_MAX;
 }
 
 // Used Positions

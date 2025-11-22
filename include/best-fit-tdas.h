@@ -26,7 +26,8 @@ hole_t* holes_list_find_best_fit(hole_t* head, hole_t* tail, unsigned int reques
 
 hole_t* holes_list_find_closest_hole(hole_t* head, hole_t* tail, unsigned int position); // The hole previous to such position
 
-void holes_list_request_hole(hole_t** head, hole_t** tail, unsigned int requested_size, unsigned int pid, used_position_t** head_used_list, used_position_t** tail_used_list);
+// Executes the allocation and returns the position of the allocated space - returns -1 if failure
+unsigned int holes_list_request_hole(hole_t** head, hole_t** tail, unsigned int requested_size, unsigned int pid, used_position_t** head_used_list, used_position_t** tail_used_list);
 
 // Double linked ordered list - used positions
 
