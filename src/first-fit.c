@@ -6,7 +6,6 @@
 extern void holes_list_remove(hole_t* hole_to_remove, hole_t** head, hole_t** tail);
 extern void used_list_insert(used_position_t* new_alloc, used_position_t** head, used_position_t** tail);
 
-
 int holes_list_request_first_fit(
     hole_t** head_holes_list, hole_t** tail_holes_list,
     used_position_t** head_used_list, used_position_t** tail_used_list,
