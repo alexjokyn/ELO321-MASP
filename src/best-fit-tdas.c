@@ -92,13 +92,12 @@ hole_t* holes_list_find_best_fit(hole_t* head, hole_t* tail, unsigned int reques
 
     while(current!=NULL){
         if(current->size >= requested_size){
+            if(current->size == requested_size){
+                return current;
+            }
             if(current->size < best_fit_size){
                 best_fit_size = current->size;
                 best_fit_hole = current;
-
-                if(current->size == requested_size){
-                    return current;
-                }
             }
         }
         current = current->next;
