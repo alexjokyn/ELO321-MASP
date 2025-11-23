@@ -27,12 +27,12 @@ int holes_list_request_first_fit(
         current_hole = current_hole->next;
     }
 
-    // 2. Fallo de Asignación
+    // 2. Fallo de asignación
     if (found_hole == NULL) {
         return -1; 
     }
 
-    // 3. Asignación Exitosa
+    // 3. Asignación exitosa
     unsigned int allocated_position = found_hole->position;
     unsigned int original_hole_size = found_hole->size;
     unsigned int remaining_size = original_hole_size - requested_size;
