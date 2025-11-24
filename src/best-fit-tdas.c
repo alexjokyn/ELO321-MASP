@@ -182,6 +182,24 @@ unsigned int holes_list_request_hole(hole_t** head, hole_t** tail, unsigned int 
     return UINT_MAX;
 }
 
+
+void holes_list_remove(hole_t* h, hole_t** head, hole_t** tail) {
+    if (h->prev != NULL)
+        h->prev->next = h->next;
+    else
+        *head = h->next;
+
+    if (h->next != NULL)
+        h->next->prev = h->prev;
+    else
+        *tail = h->prev;
+
+    h->prev = NULL;
+    h->next = NULL;
+}
+
+
+
 // Used Positions
 void used_list_insert(used_position_t* new_alloc, used_position_t** head, used_position_t** tail){
     if(*head == NULL){

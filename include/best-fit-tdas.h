@@ -1,3 +1,6 @@
+#ifndef TDAS_H
+#define TDAS_H
+
 #include <stdlib.h>
 #include <limits.h>
 
@@ -36,3 +39,6 @@ void used_list_insert(used_position_t* new_alloc, used_position_t** head, used_p
 used_position_t* used_list_remove(used_position_t** head, used_position_t** tail, unsigned int position);
 
 used_position_t* used_list_find_closest_position(used_position_t* head, used_position_t* tail, unsigned int position); // The used position previous to such position
+
+
+#endif //TDAS_H
