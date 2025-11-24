@@ -1,6 +1,7 @@
 #ifndef HOLE_H
 #define HOLE_H
 
+#include <stdlib.h>
 
 //------------------------------------------------
 //------------- Struct Definition ----------------
@@ -23,10 +24,10 @@ typedef struct hole{
 void insert(hole* new_hole, hole** head, hole** tail);
 
 // Finds the tiniest hole, big enough to contain the requested memory size
-hole* best_fit(hole* head, hole* tail, unsigned int requested_size);
+hole* find_best_fit(hole* head, hole* tail, unsigned int requested_size);
 
 // Finds the closest previous hole in memory (lower position)
-hole* closest(hole* head, hole *tail, unsigned int position);
+hole* find_closest(hole* head, hole *tail, unsigned int position);
 
 
 #endif //HOLE_H
